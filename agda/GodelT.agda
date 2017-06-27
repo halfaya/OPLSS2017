@@ -67,9 +67,3 @@ reci = λ n → λ b → λ s → snd (iter n (0 , b) (λ p → (suc (fst p) , s
 
 plus-ir : ℕ → ℕ → ℕ
 plus-ir = λ a → λ b → reci a b (λ _ → λ r → suc r)
-
-
---e1 (e1 (e1 e0))
-
-a : ℕ × ℕ
-a = 3 , 4
