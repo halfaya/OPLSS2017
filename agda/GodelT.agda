@@ -15,6 +15,22 @@ fst (a , _) = a
 snd : {A B : Set} → A × B → B
 snd (_ , b) = b
 
+data _+_ (A : Set) (B : Set) : Set where
+  inl : A → A + B
+  inr : B → A + B
+
+data ⊤ : Set where
+  tt : ⊤
+
+data _≡_ {A : Set} : A → A → Set where
+  refl : {a : A} → a ≡ a
+
+data List : Set where
+  []  : List
+  _∷_ : ℕ → List → List
+
+------
+
 rec : {A : Set} → ℕ →  A → (ℕ → A → A) → A
 rec zero    e₀ e₁ = e₀
 rec (suc n) e₀ e₁ = e₁ n (rec n e₀ e₁)
@@ -67,3 +83,42 @@ reci = λ n → λ b → λ s → snd (iter n (0 , b) (λ p → (suc (fst p) , s
 
 plus-ir : ℕ → ℕ → ℕ
 plus-ir = λ a → λ b → reci a b (λ _ → λ r → suc r)
+
+------------
+
+-- Day 2 Exercise 2
+
+show : ℕ → (⊤ + ℕ)
+show zero    = inl tt
+show (suc n) = inr n
+
+hide : (⊤ + ℕ) → ℕ
+hide (inl tt) = zero
+hide (inr n)  = suc n
+
+showhide : (n : ℕ) → hide (show n) ≡ n
+showhide zero    = refl
+showhide (suc n) = refl
+
+hideshow : (n : ⊤ + ℕ) → show (hide n) ≡ n 
+hideshow (inl tt) = refl
+hideshow (inr n)  = refl
+
+-- bonus
+
+lshow : List → ⊤ + (ℕ × List)
+lshow []       = inl tt
+lshow (n ∷ ns) = inr (n , ns)
+
+lhide : ⊤ + (ℕ × List) → List
+lhide (inl tt)       = []
+lhide (inr (n , ns)) = n ∷ ns
+
+lshowhide : (ns : List) → lhide (lshow ns) ≡ ns
+lshowhide []       = refl
+lshowhide (n ∷ ns) = refl
+
+lhideshow : (ns : ⊤ + (ℕ × List)) → lshow (lhide ns) ≡ ns
+lhideshow (inl tt)       = refl
+lhideshow (inr (n , ns)) = refl
+
