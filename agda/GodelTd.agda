@@ -23,6 +23,9 @@ suc m == suc n = m == n
 data _≡_ {A : Set} : A → A → Set where
   refl : {a : A} → a ≡ a
 
+cong : {A B : Set} → {a a' : A} → (f : A → B) → a ≡ a' → f a ≡ f a'
+cong f refl = refl
+
 Var = ℕ
 
 data Typ : Set where
@@ -86,16 +89,14 @@ data _↦_ : Exp → Exp → Set where
 
 -- Task 2.1
 
-stepDet : (e e₁ e₂ : Exp) → (v : Val e₁) → (v' : Val e₂) → (e ↦ e₁) → (e ↦ e₂) → e₁ ≡ e₂
-stepDet e .z .z zero zero x x' = refl
-stepDet e .z .(s _) zero (suc v') x x' = {!!}
-stepDet e .z .(lam _ _) zero lam x x' = {!!}
-stepDet e .(s _) .z (suc v) zero x x' = {!!}
-stepDet e .(s _) .(s _) (suc v) (suc v') x x' = {!!}
-stepDet e .(s _) .(lam _ _) (suc v) lam x x' = {!!}
-stepDet e .(lam _ _) .z lam zero x x' = {!!}
-stepDet e .(lam _ _) .(s _) lam (suc v') x x' = {!!}
-stepDet e .(lam _ _) .(lam _ _) lam lam x x' = {!!}
+stepDet : (e e₁ e₂ : Exp) → (e ↦ e₁) → (e ↦ e₂) → e₁ ≡ e₂
+stepDet .(s e) .(s e₁) .(s e₂) (suc {e} {e₁} x) (suc {.e} {e₂} x') = cong s (stepDet e e₁ e₂ x x')
+stepDet .(ap _ _) .(ap _ _) e (app₁ {e₀} {e₁} {e₂} x) x' = {!!}
+stepDet .(ap _ _) .(ap _ _) e (app₂ {e₀} {e₁} {e₂} x x₁) x' = {!!}
+stepDet .(ap (lam _ _) _) _ {-.(subst _ 0 _)-} e₂ (appλ x) x' = {!!}
+stepDet .(rec _ _ _) .(rec _ _ _) e₂ (rece x) x' = {!!}
+stepDet .(rec e₁ _ z) e₁ e₂ recz x' = {!!}
+stepDet .(rec _ _ (s _)) _ {-.(subst _ 0 (subst (rec _ _ _) 0 _))-} e₂ (recs x) x' = {!!}
 
 --------------
 
