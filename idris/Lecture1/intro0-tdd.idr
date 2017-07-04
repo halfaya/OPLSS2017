@@ -2,14 +2,14 @@
 -- Example 1: Types are first class; compute/manipulate types
 
 StringOrNat : (isStr : Bool) -> Type
-StringOrNat False = String
-StringOrNat True  = Nat
+StringOrNat False = Nat
+StringOrNat True  = String
 
 -- Example 2: Types of one thing can influence types of another
 
 lengthOrDouble : (isStr : Bool) -> StringOrNat isStr -> Nat
-lengthOrDouble False s = length s
-lengthOrDouble True  n = n + n
+lengthOrDouble False n = n + n
+lengthOrDouble True  s = length s
 
 -- Example 3: Formatted output (Type safe printf)
 

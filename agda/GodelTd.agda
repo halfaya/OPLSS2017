@@ -40,26 +40,26 @@ data Exp : Set where
   lam : Typ → Exp → Exp
   ap  : Exp → Exp → Exp
 
-infix  3 _⊦_⟨_⟩ _↦_
+infix  3 _⊢_⟨_⟩ _↦_
 infixl 4 _∷ᵣ_
 
 data Ctx : Set where
   []   : Ctx
   _∷ᵣ_ : Ctx → Typ → Ctx
 
-data _⊦_⟨_⟩ : Ctx → Exp → Typ → Set where
-  refl : {Γ : Ctx} → {τ : Typ} → Γ ∷ᵣ τ ⊦ var 0 ⟨ τ ⟩
-  zero : {Γ : Ctx} → Γ ⊦ z ⟨ nat ⟩
-  suc  : {Γ : Ctx} → {e : Exp} → Γ ⊦ e ⟨ nat ⟩ → Γ ⊦ s e ⟨ nat ⟩
+data _⊢_⟨_⟩ : Ctx → Exp → Typ → Set where
+  refl : {Γ : Ctx} → {τ : Typ} → Γ ∷ᵣ τ ⊢ var 0 ⟨ τ ⟩
+  zero : {Γ : Ctx} → Γ ⊢ z ⟨ nat ⟩
+  suc  : {Γ : Ctx} → {e : Exp} → Γ ⊢ e ⟨ nat ⟩ → Γ ⊢ s e ⟨ nat ⟩
   rec  : {Γ : Ctx} → {e e₀ e₁ : Exp} → {τ : Typ} →
-         Γ ⊦ e ⟨ nat ⟩ →
-         Γ ⊦ e₀ ⟨ τ ⟩ →
-         Γ ∷ᵣ nat ∷ᵣ τ ⊦ e₁ ⟨ τ ⟩ →
-         Γ ⊦ rec e₀ e₁ e ⟨ τ ⟩
+         Γ ⊢ e ⟨ nat ⟩ →
+         Γ ⊢ e₀ ⟨ τ ⟩ →
+         Γ ∷ᵣ nat ∷ᵣ τ ⊢ e₁ ⟨ τ ⟩ →
+         Γ ⊢ rec e₀ e₁ e ⟨ τ ⟩
   lam  : {Γ : Ctx} → {e : Exp} → {τ₁ τ₂ : Typ} →
-         Γ ∷ᵣ τ₁ ⊦ e ⟨ τ₂ ⟩ → Γ ⊦ lam τ₁ e ⟨ arr τ₁ τ₂ ⟩
+         Γ ∷ᵣ τ₁ ⊢ e ⟨ τ₂ ⟩ → Γ ⊢ lam τ₁ e ⟨ arr τ₁ τ₂ ⟩
   app  : {Γ : Ctx} → {e₁ e₂ : Exp} → {τ τ₂ : Typ} →
-         Γ  ⊦ e₁ ⟨ arr τ₂ τ ⟩ → Γ ⊦ e₂ ⟨ τ₂ ⟩ → Γ ⊦ ap e₁ e₂ ⟨ τ ⟩
+         Γ  ⊢ e₁ ⟨ arr τ₂ τ ⟩ → Γ ⊢ e₂ ⟨ τ₂ ⟩ → Γ ⊢ ap e₁ e₂ ⟨ τ ⟩
 
 data Val : Exp → Set where
   zero : Val z
